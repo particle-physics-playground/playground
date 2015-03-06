@@ -233,7 +233,7 @@ def draw_electron3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 ################################################################################
 def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 
-    lines = draw_line3D(origin=origin,pmom=pmom,color='gray',ls='-',lw=7)
+    lines = draw_line3D(origin=origin,pmom=pmom,color='gray',ls='-',lw=4)
 
     return lines
 
