@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/12589/particle-physics-playground/playground.svg)](http://dx.doi.org/10.5281/zenodo.17257)
+
+
 Particle-Physics-Playground
 ===========================
 
