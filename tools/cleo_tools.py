@@ -220,7 +220,7 @@ def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
 ################################################################################
 def draw_beams():
 
-    lines = draw_line3D(origin=[(0,0,-0.1),(0,0,0.1)],pmom=[(0,0,-1.0),(0,0,1.0)],color='red',lw=1)
+    lines = draw_line3D(origin=[(0,0,-0.1),(0,0,0.1)],pmom=[(0,0,-1.0),(0,0,1.0)],color='green',lw=1)
 
     return lines
 
