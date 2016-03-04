@@ -261,7 +261,7 @@ def display_collision3D(collision):
     origin = np.zeros((len(photons),3))
     lines += draw_photon3D(origin=origin,pmom=pmom)
 
-    fig = plt.figure(figsize=(7,5),dpi=100)
+    fig = plt.figure(figsize=(6,4),dpi=100)
     ax = fig.add_subplot(1,1,1)
     ax = fig.gca(projection='3d')
     plt.subplots_adjust(top=0.98,bottom=0.02,right=0.98,left=0.02)
