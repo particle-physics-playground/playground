@@ -4,7 +4,22 @@ import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 import mpl_toolkits.mplot3d.art3d as a3
 
+import zipfile
+
 ################################################################################
+def get_collisions_from_filename(infilename,verbose=False):
+
+    infile = None
+    if zipfile.is_zipfile(infilename) is True:
+        z = zipfile.ZipFile(infilename,'r')
+        infile = z.open(z.namelist()[0],'r')
+    else:
+        infile = open(infilename)
+
+    collisions = get_collisions(infile,verbose)
+
+    return collisions
+
 ################################################################################
 def get_collisions(infile,verbose=False):
 
