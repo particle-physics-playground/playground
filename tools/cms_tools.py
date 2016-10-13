@@ -4,7 +4,25 @@ import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 import mpl_toolkits.mplot3d.art3d as a3
 
+from IPython.display import clear_output,display
+import time
+
+import zipfile
+
 ################################################################################
+def get_collisions_from_filename(infilename,verbose=False):
+
+    infile = None
+    if zipfile.is_zipfile(infilename) is True:
+        z = zipfile.ZipFile(infilename,'r')
+        infile = z.open(z.namelist()[0],'r')
+    else:
+        infile = open(infilename)
+
+    collisions = get_collisions(infile,verbose)
+
+    return collisions
+
 ################################################################################
 def get_collisions(infile,verbose=False):
 
@@ -239,7 +257,15 @@ def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 
 ################################################################################
 ################################################################################
-def display_collision3D(collision):
+def display_collision3D(collision,fig=None,ax=None):
+
+    if fig is None:
+        fig = plt.figure(figsize=(6,4),dpi=100)
+
+    if ax is None:
+        ax = fig.add_subplot(1,1,1)
+        ax = fig.gca(projection='3d')
+        plt.subplots_adjust(top=0.98,bottom=0.02,right=0.98,left=0.02)
 
     jets,muons,electrons,photons,met = collision
 
@@ -261,10 +287,6 @@ def display_collision3D(collision):
     origin = np.zeros((len(photons),3))
     lines += draw_photon3D(origin=origin,pmom=pmom)
 
-    fig = plt.figure(figsize=(7,5),dpi=100)
-    ax = fig.add_subplot(1,1,1)
-    ax = fig.gca(projection='3d')
-    plt.subplots_adjust(top=0.98,bottom=0.02,right=0.98,left=0.02)
 
     for l in lines:
         ax.add_line(l)
@@ -274,4 +296,56 @@ def display_collision3D(collision):
     ax.set_zlim(-200,200)
 
     #return lines,fig,ax
+
+################################################################################
+def display_collision3D_animate(collisions,fig=None):
+
+    if fig is None:
+        fig = plt.figure(figsize=(6,4),dpi=100)
+    ax = fig.add_subplot(1,1,1)
+    ax = fig.gca(projection='3d')
+    plt.subplots_adjust(top=0.98,bottom=0.02,right=0.98,left=0.02)
+
+    if type(collisions[0][0][0]) is not list:
+        collisions = [collisions]
+
+    for collision in collisions:
+        # For animations
+        #fig.clear()
+        clear_output()
+        ax.clear();
+
+        jets,muons,electrons,photons,met = collision
+
+        lines = draw_beams()
+
+        pmom = np.array(jets).transpose()[1:4].transpose()
+        origin = np.zeros((len(jets),3))
+        lines += draw_jet3D(origin=origin,pmom=pmom)
+
+        pmom = np.array(muons).transpose()[1:4].transpose()
+        origin = np.zeros((len(muons),3))
+        lines += draw_muon3D(origin=origin,pmom=pmom)
+
+        pmom = np.array(electrons).transpose()[1:4].transpose()
+        origin = np.zeros((len(electrons),3))
+        lines += draw_electron3D(origin=origin,pmom=pmom)
+
+        pmom = np.array(photons).transpose()[1:4].transpose()
+        origin = np.zeros((len(photons),3))
+        lines += draw_photon3D(origin=origin,pmom=pmom)
+
+
+        for l in lines:
+            ax.add_line(l)
+
+        ax.set_xlim(-200,200)
+        ax.set_ylim(-200,200)
+        ax.set_zlim(-200,200)
+
+        display(ax)
+        time.sleep(0.5)
+
+    #return lines,fig,ax
+
 
