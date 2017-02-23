@@ -42,16 +42,10 @@ def get_collisions(infile,verbose=False):
                 px = float(vals[1])
                 py = float(vals[2])
                 pz = float(vals[3])
-                q = int(vals[4])
-                sigpi = float(vals[5])
-                sigka = float(vals[6])
-                likpi = float(vals[7])
-                likka = float(vals[8])
-                nphopi = int(vals[9])
-                nphoka = int(vals[10])
-                depthmu = float(vals[11])
-                cluster_energy = float(vals[12])
-                pions.append([e,px,py,pz,q,sigpi,sigka,likpi,likka,nphopi,nphoka,depthmu,cluster_energy])
+                q = int(float(vals[4]))
+                beta = float(vals[5])
+                dedx = float(vals[6])
+                pions.append([e,px,py,pz,q,beta,dedx])
 
             # Read in the kaon info for this collision.
             kaons = []
@@ -64,16 +58,27 @@ def get_collisions(infile,verbose=False):
                 px = float(vals[1])
                 py = float(vals[2])
                 pz = float(vals[3])
-                q = int(vals[4])
-                sigpi = float(vals[5])
-                sigka = float(vals[6])
-                likpi = float(vals[7])
-                likka = float(vals[8])
-                nphopi = int(vals[9])
-                nphoka = int(vals[10])
-                depthmu = float(vals[11])
-                cluster_energy = float(vals[12])
-                kaons.append([e,px,py,pz,q,sigpi,sigka,likpi,likka,nphopi,nphoka,depthmu,cluster_energy])
+                q = int(float(vals[4]))
+                beta = float(vals[5])
+                dedx = float(vals[6])
+                kaons.append([e,px,py,pz,q,beta,dedx])
+
+            # Read in the proton info for this collision.
+            protons = []
+            line = infile.readline()
+            nprotons = int(line)
+            for i in range(nprotons):
+                line = infile.readline()
+                vals = line.split()
+                e = float(vals[0])
+                px = float(vals[1])
+                py = float(vals[2])
+                pz = float(vals[3])
+                q = int(float(vals[4]))
+                beta = float(vals[5])
+                dedx = float(vals[6])
+                protons.append([e,px,py,pz,q,beta,dedx])
+
 
             # Read in the muon info for this collision.
             muons = []
@@ -86,16 +91,10 @@ def get_collisions(infile,verbose=False):
                 px = float(vals[1])
                 py = float(vals[2])
                 pz = float(vals[3])
-                q = int(vals[4])
-                sigpi = float(vals[5])
-                sigka = float(vals[6])
-                likpi = float(vals[7])
-                likka = float(vals[8])
-                nphopi = int(vals[9])
-                nphoka = int(vals[10])
-                depthmu = float(vals[11])
-                cluster_energy = float(vals[12])
-                muons.append([e,px,py,pz,q,sigpi,sigka,likpi,likka,nphopi,nphoka,depthmu,cluster_energy])
+                q = int(float(vals[4]))
+                beta = float(vals[5])
+                dedx = float(vals[6])
+                muons.append([e,px,py,pz,q,beta,dedx])
 
             # Read in the electron info for this collision.
             electrons = []
@@ -108,17 +107,10 @@ def get_collisions(infile,verbose=False):
                 px = float(vals[1])
                 py = float(vals[2])
                 pz = float(vals[3])
-                q = int(vals[4])
-                sigpi = float(vals[5])
-                sigka = float(vals[6])
-                likpi = float(vals[7])
-                likka = float(vals[8])
-                nphopi = int(vals[9])
-                nphoka = int(vals[10])
-                depthmu = float(vals[11])
-                cluster_energy = float(vals[12])
-                electrons.append([e,px,py,pz,q,sigpi,sigka,likpi,likka,nphopi,nphoka,depthmu,cluster_energy])
-
+                q = int(float(vals[4]))
+                beta = float(vals[5])
+                dedx = float(vals[6])
+                electrons.append([e,px,py,pz,q,beta,dedx])
 
             # Read in the photon info for this collision.
             photons = []
@@ -144,7 +136,7 @@ def get_collisions(infile,verbose=False):
             new_collision = False
             collision_count += 1
 
-            collisions.append([pions,kaons,muons,electrons,photons])
+            collisions.append([pions,kaons,protons,muons,electrons,photons])
 
     return collisions
 
