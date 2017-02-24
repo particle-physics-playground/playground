@@ -39,7 +39,7 @@ def get_collisions(infile,verbose=False):
         line = infile.readline()
 
         if collision_count%1000==0 and verbose:
-            print "collision count: ",collision_count
+            print("collision count: ",collision_count)
 
         if line=="":
             not_at_end = False
@@ -53,7 +53,7 @@ def get_collisions(infile,verbose=False):
             jets = []
             line = infile.readline()
             njets = int(line)
-            for i in xrange(njets):
+            for i in range(njets):
                 line = infile.readline()
                 vals = line.split()
                 e = float(vals[0])
@@ -68,7 +68,7 @@ def get_collisions(infile,verbose=False):
             line = infile.readline()
             nmuons = int(line)
             num_mu=0
-            for i in xrange(nmuons):
+            for i in range(nmuons):
                 line = infile.readline()
                 vals = line.split()
                 e = float(vals[0])
@@ -84,7 +84,7 @@ def get_collisions(infile,verbose=False):
             electrons = []
             line = infile.readline()
             nelectrons = int(line)
-            for i in xrange(nelectrons):
+            for i in range(nelectrons):
                 line = infile.readline()
                 vals = line.split()
                 e = float(vals[0])
@@ -98,7 +98,7 @@ def get_collisions(infile,verbose=False):
             photons = []
             line = infile.readline()
             nphotons = int(line)
-            for i in xrange(nphotons):
+            for i in range(nphotons):
                 line = infile.readline()
                 vals = line.split()
                 e = float(vals[0])
@@ -171,7 +171,7 @@ def draw_jets(origins=[(0,0)],angles=[90],lengths=[0.5],opening_angles=[20],ntra
     
 ################################################################################
 ################################################################################
-def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
+def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',lw=2.0,ls='solid'):
 
     lines = []
 
@@ -184,7 +184,7 @@ def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
         y1 = p[0]
         z1 = p[1]
         #print x1,y1,z1
-        line = a3.Line3D((o[0],x1),(o[1],y1),(o[0],z1), lw=lw, ls=ls, alpha=0.9,color=color,markeredgecolor=color)
+        line = a3.Line3D((o[0],x1),(o[1],y1),(o[0],z1), lw=lw, alpha=0.9,color=color,markeredgecolor=color, linestyle = ls)
         lines.append(line)
 
     return lines
@@ -200,7 +200,7 @@ def draw_beams():
 
 ################################################################################
 ################################################################################
-def draw_jet3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
+def draw_jet3D(origin=[(0,0,0)],pmom=[(1,1,1)],ls='solid',color='orange'):
 
     neworg = origin.copy()
     newmom = pmom.copy()
@@ -226,38 +226,42 @@ def draw_jet3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
             newmom = np.vstack((newmom,pnew))
             neworg = np.vstack((neworg,(0,0,0)))
 
-    lines = draw_line3D(origin=neworg,pmom=newmom,color='orange',lw=1)
+    lines = draw_line3D(origin=neworg,pmom=newmom,color=color,lw=1,ls=ls)
+    ##lines += draw_line3D(origin=neworg,pmom=newmom,color='gray',lw=.25,ls='solid')
 
     return lines
 
 ################################################################################
 ################################################################################
-def draw_muon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
-
-    lines = draw_line3D(origin=origin,pmom=pmom,color='blue',lw=5)
-
-    return lines
-
-################################################################################
-################################################################################
-def draw_electron3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
-
-    lines = draw_line3D(origin=origin,pmom=pmom,color='green',lw=2)
-
-    return lines
-
-
-################################################################################
-################################################################################
-def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
-
-    lines = draw_line3D(origin=origin,pmom=pmom,color='gray',ls='-',lw=4)
+def draw_muon3D(origin=[(0,0,0)],pmom=[(1,1,1)],ls='solid',color='blue'):
+    
+    lines = draw_line3D(origin=origin,pmom=pmom,color=color,lw=5,ls=ls)
+    ##lines += draw_line3D(origin=origin,pmom=pmom,color='gray',lw=.25,ls='solid')
 
     return lines
 
 ################################################################################
 ################################################################################
-def display_collision3D(collision,fig=None,ax=None):
+def draw_electron3D(origin=[(0,0,0)],pmom=[(1,1,1)],ls='solid',color='green'):
+
+    lines = draw_line3D(origin=origin,pmom=pmom,color=color,lw=2,ls=ls)
+    ##lines += draw_line3D(origin=origin,pmom=pmom,color='gray',lw=.25,ls='solid')
+
+    return lines
+
+
+################################################################################
+################################################################################
+def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)],ls='solid',color='gray'):
+    
+    lines = draw_line3D(origin=origin,pmom=pmom,color=color,ls=ls,lw=4)
+   ## lines += draw_line3D(origin=origin,pmom=pmom,color='gray',lw=.25,ls='solid')
+
+    return lines
+
+################################################################################
+################################################################################
+def display_collision3D(collision,fig=None,ax=None,color_blind=False):
 
     if fig is None:
         fig = plt.figure(figsize=(6,4),dpi=100)
@@ -270,23 +274,38 @@ def display_collision3D(collision,fig=None,ax=None):
     jets,muons,electrons,photons,met = collision
 
     lines = draw_beams()
+    if(color_blind == False):
+        pmom = np.array(jets).transpose()[1:4].transpose()
+        origin = np.zeros((len(jets),3))
+        lines += draw_jet3D(origin=origin,pmom=pmom)
 
-    pmom = np.array(jets).transpose()[1:4].transpose()
-    origin = np.zeros((len(jets),3))
-    lines += draw_jet3D(origin=origin,pmom=pmom)
+        pmom = np.array(muons).transpose()[1:4].transpose()
+        origin = np.zeros((len(muons),3))
+        lines += draw_muon3D(origin=origin,pmom=pmom)
 
-    pmom = np.array(muons).transpose()[1:4].transpose()
-    origin = np.zeros((len(muons),3))
-    lines += draw_muon3D(origin=origin,pmom=pmom)
+        pmom = np.array(electrons).transpose()[1:4].transpose()
+        origin = np.zeros((len(electrons),3))
+        lines += draw_electron3D(origin=origin,pmom=pmom)
 
-    pmom = np.array(electrons).transpose()[1:4].transpose()
-    origin = np.zeros((len(electrons),3))
-    lines += draw_electron3D(origin=origin,pmom=pmom)
+        pmom = np.array(photons).transpose()[1:4].transpose()
+        origin = np.zeros((len(photons),3))
+        lines += draw_photon3D(origin=origin,pmom=pmom)
+    if(color_blind == True):
+        pmom = np.array(jets).transpose()[1:4].transpose()
+        origin = np.zeros((len(jets),3))
+        lines += draw_jet3D(origin=origin,pmom=pmom,ls='solid',color='gray')
 
-    pmom = np.array(photons).transpose()[1:4].transpose()
-    origin = np.zeros((len(photons),3))
-    lines += draw_photon3D(origin=origin,pmom=pmom)
+        pmom = np.array(muons).transpose()[1:4].transpose()
+        origin = np.zeros((len(muons),3))
+        lines += draw_muon3D(origin=origin,pmom=pmom,ls='dashed',color='black')
 
+        pmom = np.array(electrons).transpose()[1:4].transpose()
+        origin = np.zeros((len(electrons),3))
+        lines += draw_electron3D(origin=origin,pmom=pmom,ls='dashed',color='gray')
+
+        pmom = np.array(photons).transpose()[1:4].transpose()
+        origin = np.zeros((len(photons),3))
+        lines += draw_photon3D(origin=origin,pmom=pmom,ls='solid',color='black')
 
     for l in lines:
         ax.add_line(l)
@@ -296,8 +315,9 @@ def display_collision3D(collision,fig=None,ax=None):
     ax.set_zlim(-200,200)
 
     #return lines,fig,ax
-
 ################################################################################
+################################################################################
+
 def display_collision3D_animate(collisions,fig=None):
 
     if fig is None:

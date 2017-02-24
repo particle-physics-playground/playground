@@ -212,7 +212,7 @@ def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
 ################################################################################
 def draw_beams():
 
-    lines = draw_line3D(origin=[(0,0,-0.1),(0,0,0.1)],pmom=[(0,0,-1.0),(0,0,1.0)],color='green',lw=1)
+    lines = draw_line3D(origin=[(0,0,-0.1),(0,0,0.1)],pmom=[(0,0,-5.0),(0,0,5.0)],color='green',lw=1)
 
     return lines
 
@@ -265,6 +265,14 @@ def draw_kaon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 
 ################################################################################
 ################################################################################
+def draw_proton3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
+
+    lines = draw_line3D(origin=origin,pmom=pmom,color='purple',lw=5)
+
+    return lines
+
+################################################################################
+################################################################################
 def draw_muon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 
     lines = draw_line3D(origin=origin,pmom=pmom,color='blue',lw=5)
@@ -292,7 +300,7 @@ def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 ################################################################################
 def display_collision3D(collision):
 
-    pions,kaons,muons,electrons,photons = collision
+    pions,kaons,protons,muons,electrons,photons = collision
 
     lines = draw_beams()
 
@@ -303,6 +311,10 @@ def display_collision3D(collision):
     pmom = np.array(kaons).transpose()[1:4].transpose()
     origin = np.zeros((len(kaons),3))
     lines += draw_kaon3D(origin=origin,pmom=pmom)
+
+    pmom = np.array(protons).transpose()[1:4].transpose()
+    origin = np.zeros((len(protons),3))
+    lines += draw_proton3D(origin=origin,pmom=pmom)
 
     pmom = np.array(muons).transpose()[1:4].transpose()
     origin = np.zeros((len(muons),3))
@@ -324,9 +336,10 @@ def display_collision3D(collision):
     for l in lines:
         ax.add_line(l)
 
-    ax.set_xlim(-1,1)
-    ax.set_ylim(-1,1)
-    ax.set_zlim(-1,1)
+    # This effectively sets the scale for the expected momentum of the particles.
+    ax.set_xlim(-2,2)
+    ax.set_ylim(-2,2)
+    ax.set_zlim(-2,2)
 
     #return lines,fig,ax
 
