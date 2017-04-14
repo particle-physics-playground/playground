@@ -20,6 +20,12 @@ def get_collisions(infile,verbose=False):
         ############################################################################
         line = infile.readline()
 
+        # When the data is read in as a zipfile, readline will
+        # always return bytes, rather than strings and the find()
+        # member function doesn't work. 
+        if type(line)==bytes:
+            line = line.decode()
+
         if collision_count%1000==0 and verbose:
             print("collision count: ",collision_count)
 
