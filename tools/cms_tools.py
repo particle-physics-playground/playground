@@ -273,8 +273,8 @@ def display_collision3D(collision,fig=None,ax=None,color_blind=False):
         fig = plt.figure(figsize=(6,4),dpi=100)
 
     if ax is None:
-        ax = fig.add_subplot(1,1,1)
-        ax = fig.gca(projection='3d')
+        ax = fig.add_subplot(1,1,1,projection='3d')
+        #ax = fig.gca()
         plt.subplots_adjust(top=0.98,bottom=0.02,right=0.98,left=0.02)
 
     jets,muons,electrons,photons,met = collision
